@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Games Report 2024 - Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Inline CSS for standalone file */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f8fafc;
+            --tertiary-bg: #f1f5f9;
+            --accent-bg: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --border-light: #f1f5f9;
+            --primary-500: #6366f1;
+            --primary-600: #4f46e5;
+            --primary-700: #4338ca;
+            --success-500: #10b981;
+            --warning-500: #f59e0b;
+            --error-500: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --transition-fast: 150ms ease-in-out;
+            --transition-normal: 300ms ease-in-out;
+            --transition-slow: 500ms ease-in-out;
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+            --space-20: 5rem;
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+        }
+
+        [data-theme="dark"] {
+            --primary-bg: #0f172a;
+            --secondary-bg: #1e293b;
+            --tertiary-bg: #334155;
+            --accent-bg: #475569;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --border-light: #475569;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color var(--transition-normal), color var(--transition-normal);
+        }
+
+        .container {
+            min-height: 100vh;
+            background: var(--primary-bg);
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid var(--border-color);
+            padding: var(--space-4) 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+        }
+
+        [data-theme="dark"] .navbar {
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .brand-icon {
+            color: var(--primary-600);
+            font-size: 1.5rem;
+        }
+
+        .brand-text {
+            color: var(--text-primary);
+        }
+
+        .brand-year {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--space-3) var(--space-4);
+            padding-left: var(--space-12);
+            width: 250px;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: var(--space-4);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .nav-btn {
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: var(--space-3);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .nav-btn:hover {
+            background: var(--tertiary-bg);
+            border-color: var(--primary-500);
+            color: var(--primary-600);
+        }
+
+        .nav-btn.primary {
+            background: var(--primary-500);
+            border-color: var(--primary-500);
+            color: white;
+        }
+
+        .nav-btn.primary:hover {
+            background: var(--primary-600);
+            border-color: var(--primary-600);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--space-20) 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-8);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: var(--space-4);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: var(--space-8);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-8);
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            margin-top: var(--space-1);
+        }
+
+        /* Game Selector */
+        .game-selector-section {
+            background: var(--secondary-bg);
+            padding: var(--space-16) 0;
+        }
+
+        .selector-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            text-align: center;
+        }
+
+        .selector-container h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--space-8);
+            color: var(--text-primary);
+        }
+
+        .game-tabs {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+        }
+
+        .game-tab {
+            background: var(--primary-bg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6) var(--space-8);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-3);
+            min-width: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-tab:hover,
+        .game-tab.active {
+            border-color: var(--primary-500);
+            background: var(--primary-500);
+            color: white;
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .tab-icon {
+            font-size: 2rem;
+        }
+
+        .game-tab span {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        /* Game Details */
+        .game-details-section {
+            background: var(--primary-bg);
+        }
+
+        .game-banner {
+            position: relative;
+            background: var(--gradient-primary);
+            padding: var(--space-16) 0;
+            overflow: hidden;
+        }
+
+        .banner-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: var(--space-8);
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .game-image-container {
+            position: relative;
+        }
+
+        .game-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .game-rating {
+            position: absolute;
+            top: -var(--space-2);
+            right: -var(--space-2);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-lg);
+            padding: var(--space-2) var(--space-3);
+            text-align: center;
+        }
+
+        .rating-value {
+            display: block;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .rating-stars {
+            color: #fbbf24;
+            font-size: 0.75rem;
+        }
+
+        .game-info {
+            color: white;
+        }
+
+        .game-info h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: var(--space-2);
+        }
+
+        .game-meta {
+            display: flex;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+            opacity: 0.9;
+            flex-wrap: wrap;
+        }
+
+        .game-meta span {
+            background: rgba(255, 255, 255, 0.1);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+        }
+
+        .game-info p {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            margin-bottom: var(--space-6);
+            opacity: 0.9;
+        }
+
+        .game-tags {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-lg);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Metrics Dashboard */
+        .metrics-dashboard {
+            background: var(--secondary-bg);
+            padding: var(--space-16) 0;
+        }
+
+        .dashboard-header {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-8);
+            flex-wrap: wrap;
+            gap: var(--space-4);
+        }
+
+        .dashboard-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .time-filter {
+            display: flex;
+            background: var(--primary-bg);
+            border-radius: var(--radius-lg);
+            padding: var(--space-1);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .time-btn {
+            background: transparent;
+            border: none;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+        }
+
+        .time-btn.active,
+        .time-btn:hover {
+            background: var(--primary-500);
+            color: white;
+        }
+
+        .metrics-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+        }
+
+        .metric-card {
+            background: var(--primary-bg);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .metric-header h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .metric-value {
+            display: flex;
+            align-items: baseline;
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+            flex-wrap: wrap;
+        }
+
+        .value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .change {
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-md);
+        }
+
+        .change.positive {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-500);
+        }
+
+        .change.negative {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-500);
+        }
+
+        .metric-chart {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--secondary-bg);
+            border-radius: var(--radius-md);
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* News Section */
+        .news-section {
+            background: var(--primary-bg);
+            padding: var(--space-16) 0;
+        }
+
+        .section-header {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            margin-bottom: var(--space-8);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-4);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .news-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+        }
+
+        .news-card {
+            background: var(--primary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all var(--transition-normal);
+            cursor: pointer;
+        }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-500);
+        }
+
+        .news-image {
+            height: 150px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .news-content {
+            padding: var(--space-6);
+        }
+
+        .news-content h3,
+        .news-content h4 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-3);
+            line-height: 1.4;
+        }
+
+        .news-content h3 {
+            font-size: 1.25rem;
+        }
+
+        .news-content h4 {
+            font-size: 1rem;
+        }
+
+        .news-content p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--space-4);
+        }
+
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.875rem;
+        }
+
+        .news-source {
+            font-weight: 500;
+            color: var(--primary-600);
+        }
+
+        .news-time {
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-primary);
+            color: var(--primary-bg);
+            padding: var(--space-16) 0 var(--space-8) 0;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-6);
+            text-align: center;
+        }
+
+        .footer-content h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: var(--space-4);
+        }
+
+        .footer-content p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-stats {
+                flex-direction: column;
+                gap: var(--space-4);
+            }
+            
+            .banner-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: var(--space-6);
+            }
+            
+            .game-info h1 {
+                font-size: 2rem;
+            }
+            
+            .search-input {
+                width: 200px;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        .metric-card,
+        .news-card {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .metric-card:nth-child(1) { animation-delay: 0.1s; }
+        .metric-card:nth-child(2) { animation-delay: 0.2s; }
+        .metric-card:nth-child(3) { animation-delay: 0.3s; }
+        .metric-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success-500);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Header -->
+        <nav class="navbar">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <i class="fas fa-gamepad brand-icon"></i>
+                    <span class="brand-text">TrendingGames</span>
+                    <span class="brand-year">2024</span>
+                </div>
+                <div class="nav-controls">
+                    <div class="search-container">
+                        <input type="text" id="searchInput" placeholder="Search games..." class="search-input">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                    <div class="nav-buttons">
+                        <button id="darkModeToggle" class="nav-btn">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <button id="exportBtn" class="nav-btn primary">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">Gaming Industry Report 2024</h1>
+                    <p class="hero-subtitle">Comprehensive analysis of trending games, market performance, and player engagement worldwide</p>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <span class="stat-number">$196B</span>
+                            <span class="stat-label">Global Revenue</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="stat-number">3.2B</span>
+                            <span class="stat-label">Active Players</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="stat-number">2,500+</span>
+                            <span class="stat-label">New Releases</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Selector -->
+        <section class="game-selector-section">
+            <div class="selector-container">
+                <h2>Select Game for Detailed Analysis</h2>
+                <div class="game-tabs">
+                    <button class="game-tab active" data-game="fortnite">
+                        <div class="tab-icon">🏗️</div>
+                        <span>Fortnite</span>
+                    </button>
+                    <button class="game-tab" data-game="valorant">
+                        <div class="tab-icon">🎯</div>
+                        <span>Valorant</span>
+                    </button>
+                    <button class="game-tab" data-game="genshin">
+                        <div class="tab-icon">⚔️</div>
+                        <span>Genshin Impact</span>
+                    </button>
+                    <button class="game-tab" data-game="apex">
+                        <div class="tab-icon">🔫</div>
+                        <span>Apex Legends</span>
+                    </button>
+                    <button class="game-tab" data-game="minecraft">
+                        <div class="tab-icon">🧱</div>
+                        <span>Minecraft</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Details Section -->
+        <section class="game-details-section">
+            <div class="game-banner">
+                <div class="banner-content">
+                    <div class="game-image-container">
+                        <img id="gameImage" src="data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='fortnite' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%236366f1;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23a855f7;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='120' height='120' fill='url(%23fortnite)' rx='20'/%3E%3Ctext x='60' y='75' font-family='Arial, sans-serif' font-size='40' fill='white' text-anchor='middle'%3E🏗️%3C/text%3E%3C/svg%3E" alt="Fortnite" class="game-logo">
+                        <div class="game-rating">
+                            <span class="rating-value">4.8</span>
+                            <div class="rating-stars">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h1 id="gameTitle">Fortnite</h1>
+                        <div class="game-meta">
+                            <span class="game-developer">Epic Games</span>
+                            <span class="game-genre">Battle Royale</span>
+                            <span class="game-release">2017</span>
+                        </div>
+                        <p id="gameDescription">Epic's battle royale phenomenon continues to dominate the gaming landscape with innovative gameplay mechanics, frequent updates, and massive cultural impact. The game maintains its position as one of the most-watched and played titles globally.</p>
+                        <div class="game-tags">
+                            <span class="tag">Free-to-Play</span>
+                            <span class="tag">Cross-Platform</span>
+                            <span class="tag">Esports</span>
+                            <span class="tag">Live Events</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Metrics Dashboard -->
+        <section class="metrics-dashboard">
+            <div class="dashboard-header">
+                <h2>Performance Metrics</h2>
+                <div class="time-filter">
+                    <button class="time-btn active" data-period="7d">7D</button>
+                    <button class="time-btn" data-period="30d">30D</button>
+                    <button class="time-btn" data-period="90d">90D</button>
+                    <button class="time-btn" data-period="1y">1Y</button>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Active Players</h3>
+                    </div>
+                    <div class="metric-value">
+                        <span class="value">400M</span>
+                        <span class="change positive">+12.5%</span>
+                    </div>
+                    <div class="metric-chart">Chart Placeholder</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3>Twitch Views</h3>
+                    </div>
+                    <div class="metric-value">
+                        <span class="value">2.1B</span>
+                        <span class="change positive">+8.3%</span>
+                    </div>
+                    <div class="metric-chart">Chart Placeholder</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <h3>Revenue</h3>
+                    </div>
+                    <div class="metric-value">
+                        <span class="value">$5.8B</span>
+                        <span class="change positive">+15.2%</span>
+                    </div>
+                    <div class="metric-chart">Chart Placeholder</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Esports Prize Pool</h3>
+                    </div>
+                    <div class="metric-value">
+                        <span class="value">$40M</span>
+                        <span class="change positive">+22.1%</span>
+                    </div>
+                    <div class="metric-chart">Chart Placeholder</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- News & Updates -->
+        <section class="news-section">
+            <div class="section-header">
+                <h2>Latest Gaming News</h2>
+            </div>
+            
+            <div class="news-grid">
+                <article class="news-card">
+                    <div class="news-image">📰</div>
+                    <div class="news-content">
+                        <h3>Epic Games Announces $2 Billion Investment in Metaverse Development</h3>
+                        <p>Major funding round positions Fortnite as the cornerstone of Epic's ambitious metaverse platform, with new virtual experiences planned for 2024.</p>
+                        <div class="news-meta">
+                            <span class="news-source">GameIndustry.biz</span>
+                            <span class="news-time">2 hours ago</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-image">🎮</div>
+                    <div class="news-content">
+                        <h4>Fortnite Chapter 5 Season 1 Breaks Player Records</h4>
+                        <p>New season launch sees 44.7 million concurrent players, the highest in game's history.</p>
+                        <div class="news-meta">
+                            <span class="news-source">IGN</span>
+                            <span class="news-time">5 hours ago</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-image">🧱</div>
+                    <div class="news-content">
+                        <h4>LEGO Fortnite Mode Reaches 100M Players</h4>
+                        <p>The creative survival mode has become one of the most popular gaming experiences of 2024.</p>
+                        <div class="news-meta">
+                            <span class="news-source">Polygon</span>
+                            <span class="news-time">1 day ago</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-image">🎯</div>
+                    <div class="news-content">
+                        <h4>Valorant Esports Scene Continues to Grow</h4>
+                        <p>Riot Games announces new tournament circuit with increased prize pools and global expansion.</p>
+                        <div class="news-meta">
+                            <span class="news-source">ESPN Esports</span>
+                            <span class="news-time">2 days ago</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <h4>TrendingGames 2024</h4>
+                <p>Comprehensive gaming industry analytics and insights</p>
+                <p style="margin-top: var(--space-4); opacity: 0.6;">Last updated: <span id="lastUpdated">December 15, 2024</span></p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Inline JavaScript for standalone file
+        class GameReportDashboard {
+            constructor() {
+                this.currentGame = 'fortnite';
+                this.darkMode = localStorage.getItem('darkMode') === 'true';
+                this.gameData = {
+                    fortnite: {
+                        title: 'Fortnite',
+                        developer: 'Epic Games',
+                        genre: 'Battle Royale',
+                        release: '2017',
+                        description: 'Epic\'s battle royale phenomenon continues to dominate the gaming landscape with innovative gameplay mechanics, frequent updates, and massive cultural impact. The game maintains its position as one of the most-watched and played titles globally.',
+                        tags: ['Free-to-Play', 'Cross-Platform', 'Esports', 'Live Events'],
+                        rating: 4.8,
+                        image: "data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='fortnite' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%236366f1;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23a855f7;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='120' height='120' fill='url(%23fortnite)' rx='20'/%3E%3Ctext x='60' y='75' font-family='Arial, sans-serif' font-size='40' fill='white' text-anchor='middle'%3E🏗️%3C/text%3E%3C/svg%3E",
+                        metrics: { players: '400M', views: '2.1B', revenue: '$5.8B', esports: '$40M' },
+                        changes: { players: '+12.5%', views: '+8.3%', revenue: '+15.2%', esports: '+22.1%' }
+                    },
+                    valorant: {
+                        title: 'Valorant',
+                        developer: 'Riot Games',
+                        genre: 'Tactical Shooter',
+                        release: '2020',
+                        description: 'Riot\'s tactical first-person shooter combines precise gunplay with unique agent abilities. The game has rapidly built a competitive esports scene and maintains strong viewership on streaming platforms.',
+                        tags: ['Free-to-Play', 'Competitive', 'Esports', '5v5'],
+                        rating: 4.6,
+                        image: "data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='valorant' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ff4654;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23ff1744;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='120' height='120' fill='url(%23valorant)' rx='20'/%3E%3Ctext x='60' y='75' font-family='Arial, sans-serif' font-size='40' fill='white' text-anchor='middle'%3E🎯%3C/text%3E%3C/svg%3E",
+                        metrics: { players: '180M', views: '1.8B', revenue: '$2.1B', esports: '$25M' },
+                        changes: { players: '+18.7%', views: '+22.1%', revenue: '+31.4%', esports: '+45.2%' }
+                    },
+                    genshin: {
+                        title: 'Genshin Impact',
+                        developer: 'miHoYo',
+                        genre: 'Action RPG',
+                        release: '2020',
+                        description: 'An open-world action RPG that has redefined mobile gaming with console-quality graphics and gameplay. The game continues to break revenue records with its gacha system and regular content updates.',
+                        tags: ['Free-to-Play', 'Open World', 'Gacha', 'Cross-Platform'],
+                        rating: 4.5,
+                        image: "data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='genshin' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2300bcd4;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23009688;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='120' height='120' fill='url(%23genshin)' rx='20'/%3E%3Ctext x='60' y='75' font-family='Arial, sans-serif' font-size='40' fill='white' text-anchor='middle'%3E⚔️%3C/text%3E%3C/svg%3E",
+                        metrics: { players: '120M', views: '950M', revenue: '$4.2B', esports: '$8M' },
+                        changes: { players: '+9.2%', views: '+15.8%', revenue: '+28.3%', esports: '+67.5%' }
+                    },
+                    apex: {
+                        title: 'Apex Legends',
+                        developer: 'Respawn Entertainment',
+                        genre: 'Battle Royale',
+                        release: '2019',
+                        description: 'A character-based battle royale that combines fast-paced combat with unique legend abilities. The game maintains a strong competitive scene and continues to innovate within the battle royale genre.',
+                        tags: ['Free-to-Play', 'Hero Shooter', 'Battle Royale', 'Squad-Based'],
+                        rating: 4.3,
+                        image: "data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='apex' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ff6600;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23ff3300;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='120' height='120' fill='url(%23apex)' rx='20'/%3E%3Ctext x='60' y='75' font-family='Arial, sans-serif' font-size='40' fill='white' text-anchor='middle'%3E🔫%3C/text%3E%3C/svg%3E",
+                        metrics: { players: '130M', views: '780M', revenue: '$1.8B', esports: '$15M' },
+                        changes: { players: '+5.1%', views: '+12.4%', revenue: '+18.7%', esports: '+25.8%' }
+                    },
+                    minecraft: {
+                        title: 'Minecraft',
+                        developer: 'Mojang Studios',
+                        genre: 'Sandbox',
+                        release: '2011',
+                        description: 'The world\'s best-selling video game continues to thrive with regular updates, educational programs, and a massive creative community. Its influence on gaming culture remains unmatched.',
+                        tags: ['Creative', 'Sandbox', 'Educational', 'Cross-Platform'],
+                        rating: 4.9,
+                        image: "data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='minecraft' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2300a82d;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23008a24;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='120' height='120' fill='url(%23minecraft)' rx='20'/%3E%3Ctext x='60' y='75' font-family='Arial, sans-serif' font-size='40' fill='white' text-anchor='middle'%3E🧱%3C/text%3E%3C/svg%3E",
+                        metrics: { players: '300M', views: '1.5B', revenue: '$380M', esports: '$2M' },
+                        changes: { players: '+4.2%', views: '+7.8%', revenue: '+12.1%', esports: '+15.3%' }
+                    }
+                };
+                
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.initializeTheme();
+                this.updateLastUpdated();
+            }
+
+            setupEventListeners() {
+                // Game tab switching
+                document.querySelectorAll('.game-tab').forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        const gameId = e.currentTarget.dataset.game;
+                        this.switchGame(gameId);
+                    });
+                });
+
+                // Dark mode toggle
+                const darkModeToggle = document.getElementById('darkModeToggle');
+                if (darkModeToggle) {
+                    darkModeToggle.addEventListener('click', () => this.toggleDarkMode());
+                }
+
+                // Export functionality
+                const exportBtn = document.getElementById('exportBtn');
+                if (exportBtn) {
+                    exportBtn.addEventListener('click', () => this.exportReport());
+                }
+
+                // Search functionality
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => {
+                        this.filterContent(e.target.value.toLowerCase());
+                    });
+                }
+
+                // Time period filters
+                document.querySelectorAll('.time-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                        e.currentTarget.classList.add('active');
+                        this.showNotification('Time period updated!', 'info');
+                    });
+                });
+            }
+
+            initializeTheme() {
+                if (this.darkMode) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    const moonIcon = document.querySelector('#darkModeToggle i');
+                    if (moonIcon) {
+                        moonIcon.className = 'fas fa-sun';
+                    }
+                }
+            }
+
+            toggleDarkMode() {
+                this.darkMode = !this.darkMode;
+                localStorage.setItem('darkMode', this.darkMode);
+                
+                if (this.darkMode) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    document.querySelector('#darkModeToggle i').className = 'fas fa-sun';
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    document.querySelector('#darkModeToggle i').className = 'fas fa-moon';
+                }
+
+                this.showNotification('Theme changed!', 'success');
+            }
+
+            switchGame(gameId) {
+                if (!this.gameData[gameId]) return;
+
+                this.currentGame = gameId;
+                
+                // Update active tab
+                document.querySelectorAll('.game-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-game="${gameId}"]`).classList.add('active');
+
+                // Update game details
+                this.updateGameDetails();
+                
+                // Update metrics
+                this.updateMetrics();
+
+                // Smooth scroll to game details
+                document.querySelector('.game-details-section').scrollIntoView({
+                    behavior: 'smooth'
+                });
+
+                this.showNotification(`Switched to ${this.gameData[gameId].title}!`, 'success');
+            }
+
+            updateGameDetails() {
+                const game = this.gameData[this.currentGame];
+                
+                document.getElementById('gameTitle').textContent = game.title;
+                document.getElementById('gameDescription').textContent = game.description;
+                document.getElementById('gameImage').src = game.image;
+                document.getElementById('gameImage').alt = game.title;
+
+                // Update game meta info
+                const metaContainer = document.querySelector('.game-meta');
+                metaContainer.innerHTML = `
+                    <span class="game-developer">${game.developer}</span>
+                    <span class="game-genre">${game.genre}</span>
+                    <span class="game-release">${game.release}</span>
+                `;
+
+                // Update rating
+                document.querySelector('.rating-value').textContent = game.rating;
+                
+                // Update tags
+                const tagsContainer = document.querySelector('.game-tags');
+                tagsContainer.innerHTML = game.tags.map(tag => 
+                    `<span class="tag">${tag}</span>`
+                ).join('');
+            }
+
+            updateMetrics() {
+                const game = this.gameData[this.currentGame];
+                const metrics = ['players', 'views', 'revenue', 'esports'];
+                
+                metrics.forEach((metric, index) => {
+                    const cards = document.querySelectorAll('.metric-card');
+                    if (cards[index]) {
+                        const valueEl = cards[index].querySelector('.value');
+                        const changeEl = cards[index].querySelector('.change');
+                        
+                        if (valueEl && changeEl) {
+                            valueEl.textContent = game.metrics[metric];
+                            changeEl.textContent = game.changes[metric];
+                            
+                            // Animate the change
+                            valueEl.style.transform = 'scale(1.1)';
+                            setTimeout(() => {
+                                valueEl.style.transform = 'scale(1)';
+                            }, 200);
+                        }
+                    }
+                });
+            }
+
+            filterContent(query) {
+                if (!query) {
+                    this.showAllContent();
+                    return;
+                }
+
+                // Filter game tabs
+                document.querySelectorAll('.game-tab').forEach(tab => {
+                    const gameName = tab.textContent.toLowerCase();
+                    if (gameName.includes(query)) {
+                        tab.style.display = 'flex';
+                    } else {
+                        tab.style.display = 'none';
+                    }
+                });
+
+                // Filter news items
+                document.querySelectorAll('.news-card').forEach(card => {
+                    const title = card.querySelector('h3, h4')?.textContent.toLowerCase() || '';
+                    const content = card.querySelector('p')?.textContent.toLowerCase() || '';
+                    
+                    if (title.includes(query) || content.includes(query)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+
+            showAllContent() {
+                document.querySelectorAll('.game-tab, .news-card').forEach(el => {
+                    el.style.display = '';
+                });
+            }
+
+            exportReport() {
+                const reportData = {
+                    game: this.currentGame,
+                    timestamp: new Date().toISOString(),
+                    metrics: this.gameData[this.currentGame].metrics,
+                    changes: this.gameData[this.currentGame].changes
+                };
+
+                const dataStr = JSON.stringify(reportData, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `gaming-report-${this.currentGame}-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                
+                this.showNotification('Report exported successfully!', 'success');
+            }
+
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification`;
+                notification.textContent = message;
+                notification.style.background = type === 'success' ? '#10b981' : '#6366f1';
+
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+
+            updateLastUpdated() {
+                const lastUpdatedEl = document.getElementById('lastUpdated');
+                if (lastUpdatedEl) {
+                    const now = new Date();
+                    lastUpdatedEl.textContent = now.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                }
+            }
+        }
+
+        // Initialize the dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.gameReportDashboard = new GameReportDashboard();
+        });
+    </script>
+</body>
+</html>
