@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gaming Report 2024</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            background: linear-gradient(45deg, #667eea, #764ba2); 
+            color: white; 
+            padding: 20px; 
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; font-size: 3em; margin-bottom: 10px; }
+        .subtitle { text-align: center; font-size: 1.2em; margin-bottom: 40px; opacity: 0.9; }
+        .stats { display: flex; justify-content: center; gap: 50px; margin-bottom: 50px; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat-number { font-size: 2.5em; font-weight: bold; display: block; }
+        .stat-label { font-size: 0.9em; opacity: 0.8; }
+        .games { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 50px; }
+        .game { 
+            background: rgba(255,255,255,0.1); 
+            padding: 30px; 
+            border-radius: 15px; 
+            text-align: center; 
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s;
+        }
+        .game:hover { transform: translateY(-5px) scale(1.02); }
+        .game-icon { font-size: 4em; margin-bottom: 15px; }
+        .game-title { font-size: 1.5em; margin-bottom: 10px; font-weight: bold; }
+        .game-info { opacity: 0.9; margin-bottom: 20px; }
+        .game-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .game-stat { text-align: center; }
+        .game-stat-value { font-size: 1.3em; font-weight: bold; display: block; }
+        .game-stat-label { font-size: 0.8em; opacity: 0.8; }
+        .news { margin-top: 50px; }
+        .news h2 { text-align: center; font-size: 2em; margin-bottom: 30px; }
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .news-item { 
+            background: rgba(255,255,255,0.1); 
+            padding: 20px; 
+            border-radius: 10px; 
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .news-item h3 { margin-bottom: 10px; font-size: 1.1em; }
+        .news-item p { opacity: 0.9; line-height: 1.5; margin-bottom: 10px; }
+        .news-meta { font-size: 0.8em; opacity: 0.7; }
+        .buttons { text-align: center; margin: 30px 0; }
+        .btn { 
+            background: rgba(255,255,255,0.2); 
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white; 
+            padding: 10px 20px; 
+            margin: 5px; 
+            border-radius: 5px; 
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .btn:hover { background: rgba(255,255,255,0.3); }
+        .btn.active { background: rgba(255,255,255,0.4); }
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            .stats { flex-direction: column; gap: 20px; }
+            .game-stats { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Gaming Industry Report 2024</h1>
+        <p class="subtitle">Comprehensive analysis of trending games and market performance</p>
+        
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-number">$196B</span>
+                <span class="stat-label">Global Revenue</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">3.2B</span>
+                <span class="stat-label">Active Players</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">2,500+</span>
+                <span class="stat-label">New Releases</span>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn active" onclick="showAlert('Fortnite Selected! 🏗️')">🏗️ Fortnite</button>
+            <button class="btn" onclick="showAlert('Valorant Selected! 🎯')">🎯 Valorant</button>
+            <button class="btn" onclick="showAlert('Genshin Impact Selected! ⚔️')">⚔️ Genshin Impact</button>
+            <button class="btn" onclick="showAlert('Apex Legends Selected! 🔫')">🔫 Apex Legends</button>
+            <button class="btn" onclick="showAlert('Minecraft Selected! 🧱')">🧱 Minecraft</button>
+        </div>
+
+        <div class="games">
+            <div class="game">
+                <div class="game-icon">🏗️</div>
+                <div class="game-title">Fortnite</div>
+                <div class="game-info">Battle Royale • Epic Games • 2017</div>
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value">400M</span>
+                        <span class="game-stat-label">Players</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">$5.8B</span>
+                        <span class="game-stat-label">Revenue</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">2.1B</span>
+                        <span class="game-stat-label">Twitch Views</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">$40M</span>
+                        <span class="game-stat-label">Prize Pool</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game">
+                <div class="game-icon">🎯</div>
+                <div class="game-title">Valorant</div>
+                <div class="game-info">Tactical Shooter • Riot Games • 2020</div>
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value">180M</span>
+                        <span class="game-stat-label">Players</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">$2.1B</span>
+                        <span class="game-stat-label">Revenue</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">1.8B</span>
+                        <span class="game-stat-label">Twitch Views</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">$25M</span>
+                        <span class="game-stat-label">Prize Pool</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game">
+                <div class="game-icon">⚔️</div>
+                <div class="game-title">Genshin Impact</div>
+                <div class="game-info">Action RPG • miHoYo • 2020</div>
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value">120M</span>
+                        <span class="game-stat-label">Players</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">$4.2B</span>
+                        <span class="game-stat-label">Revenue</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">950M</span>
+                        <span class="game-stat-label">Twitch Views</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">$8M</span>
+                        <span class="game-stat-label">Prize Pool</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game">
+                <div class="game-icon">🔫</div>
+                <div class="game-title">Apex Legends</div>
+                <div class="game-info">Battle Royale • Respawn • 2019</div>
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value">130M</span>
+                        <span class="game-stat-label">Players</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">$1.8B</span>
+                        <span class="game-stat-label">Revenue</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">780M</span>
+                        <span class="game-stat-label">Twitch Views</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">$15M</span>
+                        <span class="game-stat-label">Prize Pool</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game">
+                <div class="game-icon">🧱</div>
+                <div class="game-title">Minecraft</div>
+                <div class="game-info">Sandbox • Mojang Studios • 2011</div>
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value">300M</span>
+                        <span class="game-stat-label">Players</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">$380M</span>
+                        <span class="game-stat-label">Revenue</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">1.5B</span>
+                        <span class="game-stat-label">Twitch Views</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">$2M</span>
+                        <span class="game-stat-label">Prize Pool</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game">
+                <div class="game-icon">🎲</div>
+                <div class="game-title">League of Legends</div>
+                <div class="game-info">MOBA • Riot Games • 2009</div>
+                <div class="game-stats">
+                    <div class="game-stat">
+                        <span class="game-stat-value">150M</span>
+                        <span class="game-stat-label">Players</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">$1.75B</span>
+                        <span class="game-stat-label">Revenue</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">1.73B</span>
+                        <span class="game-stat-label">Twitch Views</span>
+                    </div>
+                    <div class="game-stat">
+                        <span class="game-stat-value">$2.2M</span>
+                        <span class="game-stat-label">Prize Pool</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="news">
+            <h2>📰 Latest Gaming News</h2>
+            <div class="news-grid">
+                <div class="news-item">
+                    <h3>Epic Games Announces $2B Metaverse Investment</h3>
+                    <p>Major funding round positions Fortnite as the cornerstone of Epic's ambitious metaverse platform.</p>
+                    <div class="news-meta">GameIndustry.biz • 2 hours ago</div>
+                </div>
+                <div class="news-item">
+                    <h3>Fortnite Chapter 5 Breaks Player Records</h3>
+                    <p>New season launch sees 44.7 million concurrent players, highest in game's history.</p>
+                    <div class="news-meta">IGN • 5 hours ago</div>
+                </div>
+                <div class="news-item">
+                    <h3>LEGO Fortnite Reaches 100M Players</h3>
+                    <p>Creative survival mode becomes one of most popular gaming experiences of 2024.</p>
+                    <div class="news-meta">Polygon • 1 day ago</div>
+                </div>
+                <div class="news-item">
+                    <h3>Valorant Esports Scene Continues Growth</h3>
+                    <p>Riot announces new tournament circuit with increased prize pools and global expansion.</p>
+                    <div class="news-meta">ESPN Esports • 2 days ago</div>
+                </div>
+                <div class="news-item">
+                    <h3>Genshin Impact 4.3 Update Launches</h3>
+                    <p>New region Fontaine expansion brings underwater exploration and new characters.</p>
+                    <div class="news-meta">GameSpot • 3 days ago</div>
+                </div>
+                <div class="news-item">
+                    <h3>Gaming Industry Revenue Hits Record $196B</h3>
+                    <p>2024 marks strongest year for gaming with mobile leading growth at 52% market share.</p>
+                    <div class="news-meta">VentureBeat • 1 week ago</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAlert(message) {
+            // Update button states
+            document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show notification
+            alert(message);
+            
+            // Add some visual feedback
+            event.target.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                event.target.style.transform = '';
+            }, 150);
+        }
+
+        // Add hover effects to game cards
+        document.querySelectorAll('.game').forEach(game => {
+            game.addEventListener('click', function() {
+                this.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+
+        // Add loading animation
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.game').forEach((game, index) => {
+                game.style.opacity = '0';
+                game.style.transform = 'translateY(50px)';
+                setTimeout(() => {
+                    game.style.transition = 'all 0.6s ease';
+                    game.style.opacity = '1';
+                    game.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
