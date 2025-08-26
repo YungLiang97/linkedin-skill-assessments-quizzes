@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Games Report 2024 - Analytics Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Header -->
+        <nav class="navbar">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <i class="fas fa-gamepad brand-icon"></i>
+                    <span class="brand-text">TrendingGames</span>
+                    <span class="brand-year">2024</span>
+                </div>
+                <div class="nav-controls">
+                    <div class="search-container">
+                        <input type="text" id="searchInput" placeholder="Search games..." class="search-input">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                    <div class="nav-buttons">
+                        <button id="darkModeToggle" class="nav-btn">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <button id="exportBtn" class="nav-btn primary">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">Gaming Industry Report</h1>
+                    <p class="hero-subtitle">Comprehensive analysis of trending games, market performance, and player engagement in 2024</p>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <span class="stat-number">$196B</span>
+                            <span class="stat-label">Global Revenue</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="stat-number">3.2B</span>
+                            <span class="stat-label">Active Players</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="stat-number">2,500+</span>
+                            <span class="stat-label">New Releases</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="floating-card">
+                        <div class="card-header">
+                            <span class="card-title">Top Trending Game</span>
+                        </div>
+                        <div class="card-content">
+                            <img src="data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23764ba2;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='60' height='60' fill='url(%23grad1)' rx='12'/%3E%3Ctext x='30' y='38' font-family='Arial, sans-serif' font-size='24' fill='white' text-anchor='middle'%3E🎮%3C/text%3E%3C/svg%3E" alt="Fortnite" class="game-icon">
+                            <div class="game-info">
+                                <h3>Fortnite</h3>
+                                <p>+25.8% this month</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Selector -->
+        <section class="game-selector-section">
+            <div class="selector-container">
+                <h2>Select Game for Detailed Analysis</h2>
+                <div class="game-tabs">
+                    <button class="game-tab active" data-game="fortnite">
+                        <div class="tab-icon">🏗️</div>
+                        <span>Fortnite</span>
+                    </button>
+                    <button class="game-tab" data-game="valorant">
+                        <div class="tab-icon">🎯</div>
+                        <span>Valorant</span>
+                    </button>
+                    <button class="game-tab" data-game="genshin">
+                        <div class="tab-icon">⚔️</div>
+                        <span>Genshin Impact</span>
+                    </button>
+                    <button class="game-tab" data-game="apex">
+                        <div class="tab-icon">🔫</div>
+                        <span>Apex Legends</span>
+                    </button>
+                    <button class="game-tab" data-game="minecraft">
+                        <div class="tab-icon">🧱</div>
+                        <span>Minecraft</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Details Section -->
+        <section class="game-details-section">
+            <div class="game-banner">
+                <div class="banner-background"></div>
+                <div class="banner-content">
+                    <div class="game-image-container">
+                        <img id="gameImage" src="data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='fortnite' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%236366f1;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23a855f7;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='120' height='120' fill='url(%23fortnite)' rx='20'/%3E%3Ctext x='60' y='75' font-family='Arial, sans-serif' font-size='40' fill='white' text-anchor='middle'%3E🏗️%3C/text%3E%3C/svg%3E" alt="Fortnite" class="game-logo">
+                        <div class="game-rating">
+                            <span class="rating-value">4.8</span>
+                            <div class="rating-stars">★★★★★</div>
+                        </div>
+                    </div>
+                    <div class="game-info">
+                        <h1 id="gameTitle">Fortnite</h1>
+                        <div class="game-meta">
+                            <span class="game-developer">Epic Games</span>
+                            <span class="game-genre">Battle Royale</span>
+                            <span class="game-release">2017</span>
+                        </div>
+                        <p id="gameDescription">Epic's battle royale phenomenon continues to dominate the gaming landscape with innovative gameplay mechanics, frequent updates, and massive cultural impact. The game maintains its position as one of the most-watched and played titles globally.</p>
+                        <div class="game-tags">
+                            <span class="tag">Free-to-Play</span>
+                            <span class="tag">Cross-Platform</span>
+                            <span class="tag">Esports</span>
+                            <span class="tag">Live Events</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Metrics Dashboard -->
+        <section class="metrics-dashboard">
+            <div class="dashboard-header">
+                <h2>Performance Metrics</h2>
+                <div class="time-filter">
+                    <button class="time-btn active" data-period="7d">7D</button>
+                    <button class="time-btn" data-period="30d">30D</button>
+                    <button class="time-btn" data-period="90d">90D</button>
+                    <button class="time-btn" data-period="1y">1Y</button>
+                </div>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Active Players</h3>
+                    </div>
+                    <div class="metric-value">
+                        <span class="value">400M</span>
+                        <span class="change positive">+12.5%</span>
+                    </div>
+                    <div class="metric-chart">
+                        <canvas id="playersChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3>Twitch Views</h3>
+                    </div>
+                    <div class="metric-value">
+                        <span class="value">2.1B</span>
+                        <span class="change positive">+8.3%</span>
+                    </div>
+                    <div class="metric-chart">
+                        <canvas id="viewsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <h3>Revenue</h3>
+                    </div>
+                    <div class="metric-value">
+                        <span class="value">$5.8B</span>
+                        <span class="change positive">+15.2%</span>
+                    </div>
+                    <div class="metric-chart">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Esports Prize Pool</h3>
+                    </div>
+                    <div class="metric-value">
+                        <span class="value">$40M</span>
+                        <span class="change positive">+22.1%</span>
+                    </div>
+                    <div class="metric-chart">
+                        <canvas id="esportsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Analytics Section -->
+        <section class="analytics-section">
+            <div class="analytics-grid">
+                <!-- Player Demographics -->
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <h3>Player Demographics</h3>
+                        <div class="card-actions">
+                            <button class="action-btn">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="demographicsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Platform Distribution -->
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <h3>Platform Distribution</h3>
+                        <div class="card-actions">
+                            <button class="action-btn">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="platformChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Regional Performance -->
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <h3>Regional Performance</h3>
+                        <div class="card-actions">
+                            <button class="action-btn">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="regionalChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Trending Analysis -->
+                <div class="analytics-card wide">
+                    <div class="card-header">
+                        <h3>Trending Analysis</h3>
+                        <div class="trend-controls">
+                            <select id="trendMetric" class="trend-select">
+                                <option value="players">Player Count</option>
+                                <option value="revenue">Revenue</option>
+                                <option value="engagement">Engagement</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Media & Community Section -->
+        <section class="social-section">
+            <div class="section-header">
+                <h2>Social Media & Community Sentiment</h2>
+            </div>
+            
+            <div class="social-grid">
+                <!-- Sentiment Analysis -->
+                <div class="sentiment-card">
+                    <div class="sentiment-header">
+                        <h3>Community Sentiment</h3>
+                        <div class="sentiment-score">
+                            <span class="score-value">8.2</span>
+                            <span class="score-max">/10</span>
+                        </div>
+                    </div>
+                    <div class="sentiment-breakdown">
+                        <div class="sentiment-item positive">
+                            <span class="sentiment-label">Positive</span>
+                            <div class="sentiment-bar">
+                                <div class="sentiment-fill" style="width: 68%"></div>
+                            </div>
+                            <span class="sentiment-percent">68%</span>
+                        </div>
+                        <div class="sentiment-item neutral">
+                            <span class="sentiment-label">Neutral</span>
+                            <div class="sentiment-bar">
+                                <div class="sentiment-fill" style="width: 23%"></div>
+                            </div>
+                            <span class="sentiment-percent">23%</span>
+                        </div>
+                        <div class="sentiment-item negative">
+                            <span class="sentiment-label">Negative</span>
+                            <div class="sentiment-bar">
+                                <div class="sentiment-fill" style="width: 9%"></div>
+                            </div>
+                            <span class="sentiment-percent">9%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Media Mentions -->
+                <div class="mentions-card">
+                    <h3>Social Media Mentions</h3>
+                    <div class="mentions-list">
+                        <div class="mention-item">
+                            <div class="platform-icon twitter">
+                                <i class="fab fa-twitter"></i>
+                            </div>
+                            <div class="mention-stats">
+                                <span class="mention-count">1.2M</span>
+                                <span class="mention-change">+15.3%</span>
+                            </div>
+                        </div>
+                        <div class="mention-item">
+                            <div class="platform-icon youtube">
+                                <i class="fab fa-youtube"></i>
+                            </div>
+                            <div class="mention-stats">
+                                <span class="mention-count">890K</span>
+                                <span class="mention-change">+22.1%</span>
+                            </div>
+                        </div>
+                        <div class="mention-item">
+                            <div class="platform-icon reddit">
+                                <i class="fab fa-reddit"></i>
+                            </div>
+                            <div class="mention-stats">
+                                <span class="mention-count">456K</span>
+                                <span class="mention-change">+8.7%</span>
+                            </div>
+                        </div>
+                        <div class="mention-item">
+                            <div class="platform-icon tiktok">
+                                <i class="fab fa-tiktok"></i>
+                            </div>
+                            <div class="mention-stats">
+                                <span class="mention-count">2.3M</span>
+                                <span class="mention-change">+45.2%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Keywords -->
+                <div class="keywords-card">
+                    <h3>Trending Keywords</h3>
+                    <div class="keywords-cloud">
+                        <span class="keyword high">chapter 5</span>
+                        <span class="keyword medium">battle pass</span>
+                        <span class="keyword low">creative mode</span>
+                        <span class="keyword high">og fortnite</span>
+                        <span class="keyword medium">new season</span>
+                        <span class="keyword low">epic games</span>
+                        <span class="keyword high">victory royale</span>
+                        <span class="keyword medium">zero build</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Competitive Scene -->
+        <section class="esports-section">
+            <div class="section-header">
+                <h2>Competitive & Esports Scene</h2>
+            </div>
+            
+            <div class="esports-grid">
+                <div class="tournament-card">
+                    <div class="tournament-header">
+                        <h3>Fortnite World Cup 2024</h3>
+                        <span class="tournament-status live">Live</span>
+                    </div>
+                    <div class="tournament-stats">
+                        <div class="stat">
+                            <span class="stat-label">Prize Pool</span>
+                            <span class="stat-value">$30M</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Viewers</span>
+                            <span class="stat-value">2.8M</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-label">Players</span>
+                            <span class="stat-value">100</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="viewership-card">
+                    <h3>Esports Viewership Growth</h3>
+                    <canvas id="viewershipChart"></canvas>
+                </div>
+
+                <div class="top-players-card">
+                    <h3>Top Players by Earnings</h3>
+                    <div class="players-list">
+                        <div class="player-item">
+                            <div class="player-rank">1</div>
+                            <div class="player-info">
+                                <span class="player-name">Bugha</span>
+                                <span class="player-earnings">$3.2M</span>
+                            </div>
+                        </div>
+                        <div class="player-item">
+                            <div class="player-rank">2</div>
+                            <div class="player-info">
+                                <span class="player-name">Aqua</span>
+                                <span class="player-earnings">$2.9M</span>
+                            </div>
+                        </div>
+                        <div class="player-item">
+                            <div class="player-rank">3</div>
+                            <div class="player-info">
+                                <span class="player-name">Tfue</span>
+                                <span class="player-earnings">$2.7M</span>
+                            </div>
+                        </div>
+                        <div class="player-item">
+                            <div class="player-rank">4</div>
+                            <div class="player-info">
+                                <span class="player-name">Mongraal</span>
+                                <span class="player-earnings">$2.4M</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- News & Updates -->
+        <section class="news-section">
+            <div class="section-header">
+                <h2>Latest Gaming News</h2>
+                <button class="view-all-btn">View All</button>
+            </div>
+            
+            <div class="news-grid">
+                <article class="news-card featured">
+                    <div class="news-image">
+                        <div class="news-category">Breaking</div>
+                    </div>
+                    <div class="news-content">
+                        <h3>Epic Games Announces $2 Billion Investment in Metaverse Development</h3>
+                        <p>Major funding round positions Fortnite as the cornerstone of Epic's ambitious metaverse platform, with new virtual experiences planned for 2024.</p>
+                        <div class="news-meta">
+                            <span class="news-source">GameIndustry.biz</span>
+                            <span class="news-time">2 hours ago</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-content">
+                        <h4>Fortnite Chapter 5 Season 1 Breaks Player Records</h4>
+                        <p>New season launch sees 44.7 million concurrent players, the highest in game's history.</p>
+                        <div class="news-meta">
+                            <span class="news-source">IGN</span>
+                            <span class="news-time">5 hours ago</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-content">
+                        <h4>LEGO Fortnite Mode Reaches 100M Players</h4>
+                        <p>The creative survival mode has become one of the most popular gaming experiences of 2024.</p>
+                        <div class="news-meta">
+                            <span class="news-source">Polygon</span>
+                            <span class="news-time">1 day ago</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-content">
+                        <h4>Fortnite Partners with Disney for Marvel Integration</h4>
+                        <p>Extended partnership brings new Marvel characters and storylines to the battle royale experience.</p>
+                        <div class="news-meta">
+                            <span class="news-source">The Verge</span>
+                            <span class="news-time">2 days ago</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>TrendingGames 2024</h4>
+                    <p>Comprehensive gaming industry analytics and insights</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Data Sources</h4>
+                    <ul>
+                        <li>Steam Analytics</li>
+                        <li>Twitch API</li>
+                        <li>App Store Connect</li>
+                        <li>Google Play Console</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Last Updated</h4>
+                    <p id="lastUpdated">December 15, 2024</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
